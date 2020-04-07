@@ -1,0 +1,210 @@
+
+
+   ___  __   __  ____________   
+  / _ \/ /  / / / /_  __/ __ \ 
+ / ___/ /__/ /_/ / / / / /_/ /  
+/_/  /____/\____/ /_/  \____/   
+=============================    v. 4.3  
+
+> System:
+
+  USER:             dario
+  SYSTEM_NAME:      Linux
+  NODE_NAME:        Teclast-F6
+  ARCH:             x86_64
+  BYTE_ORDER:       little
+
+  - Basic data type:
+    o sizeof (char)     = 1
+    o sizeof (uchar)    = 1
+    o sizeof (short)    = 2
+    o sizeof (ushort)   = 2
+    o sizeof (int)      = 4
+    o sizeof (long)     = 8
+    o sizeof (*int)     = 8
+    o sizeof (float)    = 4
+    o sizeof (double)   = 8
+    o sizeof (*double)  = 8
+
+  - Structure data type:
+    o sizeof (CMD_LINE)   = 60
+    o sizeof (Data)       = 272
+    o sizeof (Grid)       = 1048
+    o sizeof (FLOAT_VECT) = 12
+    o sizeof (IMAGE)      = 856
+    o sizeof (OUTPUT)     = 1768
+    o sizeof (RGB)        = 3
+    o sizeof (RUNTIME)    = 46944
+    o sizeof (RESTART)    = 128
+    o sizeof (TIME_STEP)  = 128
+    o sizeof (RBOX)       = 112
+    o sizeof (State)      = 128
+    o sizeof (Sweep)      = 512
+
+> Local time:       Tue Apr  7 01:29:49 2020
+
+> Cmd line args:    
+
+> Header configuration:
+
+  PHYSICS:          HD
+  DIMENSIONS:       2
+  COMPONENTS:       2
+  GEOMETRY:         Cylindrical
+  BODY_FORCE:       NO
+  RECONSTRUCTION:   Linear TVD (Primitive lim)
+  TRACERS:          2
+  VARIABLES:        6
+  ENTROPY_SWITCH:   NO
+  LOADED MODULES:
+
+  ROTATION:         NO
+  EOS:              Ideal
+  TIME STEPPING:    Characteristic Tracing
+  DIM. SPLITTING:   No
+
+> Runtime configuration (pluto.ini):
+
+  +----------------------------------------------------------
+  | [Grid]
+  | 
+  | X1-grid    1   0.0    512    u    5.0
+  | X2-grid    1   0.0    512    u    5.0
+  | X3-grid    1   0.0    1      u    1.0
+  | 
+  | [Chombo Refinement]
+  | 
+  | Levels           4
+  | Ref_ratio        2 2 2 2 2 
+  | Regrid_interval  2 2 2 2 
+  | Refine_thresh    0.3
+  | Tag_buffer_size  3
+  | Block_factor     4
+  | Max_grid_size    32
+  | Fill_ratio       0.75
+  | 
+  | [Time]
+  | 
+  | CFL              0.4
+  | CFL_max_var      1.1
+  | tstop            1
+  | first_dt         1.e-9
+  | 
+  | [Solver]
+  | 
+  | Solver         roe
+  | 
+  | [Boundary]
+  | 
+  | X1-beg        axisymmetric
+  | X1-end        outflow
+  | X2-beg        reflective
+  | X2-end        outflow
+  | X3-beg        outflow
+  | X3-end        outflow
+  | 
+  | [Static Grid Output]
+  | 
+  | uservar    0
+  | dbl        0.1  -1   single_file
+  | flt       -1.0  -1   single_file
+  | vtk       -1.0  -1   single_file
+  | tab       -1.0  -1   
+  | ppm       -1.0  -1   
+  | png       -1.0  -1
+  | log        100
+  | analysis  -1.0  -1
+  | 
+  | [Chombo HDF5 output]
+  | 
+  | Checkpoint_interval  -1.0  0
+  | Plot_interval         1.0  0 
+  | 
+  | [Parameters]
+  | 
+  | ENRG0                       1.0  
+  | DNST0                       1.0  
+  | GAMMA                       1.4  
+  +---------------------------------------------------------
+
+> Generating grid...
+
+  Global grid:
+  X1: [   0.0000,   5.0000],    512 point(s), 2 ghosts
+  X2: [   0.0000,   5.0000],    512 point(s), 2 ghosts
+
+  Local grid:
+  X1: [   0.0000,   5.0000],    512 point(s); 2 ghosts; Active zones = [2, 513]
+  X2: [   2.5000,   3.7500],    128 point(s); 2 ghosts; Active zones = [2, 129]
+
+> Memory allocation
+> Assigning initial conditions (Startup) ...
+> Normalization Units:
+
+  [Density]:      1.673e-24 (gr/cm^3), 1.000e+00 (1/cm^3)
+  [Pressure]:     1.673e-08 (dyne/cm^2)
+  [Velocity]:     1.000e+08 (cm/s)
+  [Length]:       3.086e+18 (cm)
+  [Temperature]:  1.203e+08 X (p/rho*mu) (K)
+  [Time]:         3.086e+10 (sec), 9.785e+02 (yrs) 
+ 
+> Number of processors: 4
+> Proc size:            512 X 128
+> Parallel Directions:  X1/X2
+> Writing file #0 (dbl) to disk...
+> Starting computation... 
+
+step:0; t = 0.0000e+00; dt = 1.0000e-09; 0.0 %
+        [Mach = 29.777743]
+step:100; t = 1.3780e-04; dt = 1.3781e-05; 0.0 %
+          [Mach = 29.778878]
+step:200; t = 3.6830e-02; dt = 4.9281e-04; 3.7 %
+          [Mach = 32.743718]
+step:300; t = 8.9639e-02; dt = 5.5328e-04; 9.0 %
+          [Mach = 38.900634]
+> Writing file #1 (dbl) to disk...
+step:400; t = 1.4512e-01; dt = 5.1784e-04; 14.5 %
+          [Mach = 45.430435]
+step:500; t = 1.9435e-01; dt = 4.8790e-04; 19.4 %
+          [Mach = 51.130040]
+> Writing file #2 (dbl) to disk...
+step:600; t = 2.4446e-01; dt = 5.1867e-04; 24.4 %
+          [Mach = 56.905446]
+step:700; t = 2.9701e-01; dt = 5.3100e-04; 29.7 %
+          [Mach = 62.734274]
+> Writing file #3 (dbl) to disk...
+step:800; t = 3.5069e-01; dt = 5.4423e-04; 35.1 %
+          [Mach = 68.331376]
+> Writing file #4 (dbl) to disk...
+step:900; t = 4.0612e-01; dt = 5.6248e-04; 40.6 %
+          [Mach = 73.894028]
+step:1000; t = 4.6304e-01; dt = 5.7727e-04; 46.3 %
+           [Mach = 79.408091]
+> Writing file #5 (dbl) to disk...
+step:1100; t = 5.2079e-01; dt = 5.7552e-04; 52.1 %
+           [Mach = 84.438376]
+step:1200; t = 5.7814e-01; dt = 5.7490e-04; 57.8 %
+           [Mach = 88.617100]
+> Writing file #6 (dbl) to disk...
+step:1300; t = 6.3681e-01; dt = 6.0217e-04; 63.7 %
+           [Mach = 92.647218]
+step:1400; t = 6.9817e-01; dt = 6.2425e-04; 69.8 %
+           [Mach = 96.401290]
+> Writing file #7 (dbl) to disk...
+step:1500; t = 7.6198e-01; dt = 6.5029e-04; 76.2 %
+           [Mach = 100.238076]
+> Writing file #8 (dbl) to disk...
+step:1600; t = 8.2704e-01; dt = 6.4419e-04; 82.7 %
+           [Mach = 103.847504]
+step:1700; t = 8.9111e-01; dt = 6.5257e-04; 89.1 %
+           [Mach = 107.296371]
+> Writing file #9 (dbl) to disk...
+step:1800; t = 9.6057e-01; dt = 7.3751e-04; 96.1 %
+           [Mach = 111.105208]
+> Writing file #10 (dbl) to disk...
+
+> Total allocated memory   31.00 Mb (proc #2)
+> Elapsed time              0d:0h:11m:7s
+> Average time/step         3.60e-01  (sec)  
+> Local time                Tue Apr  7 01:40:56 2020
+> Done

@@ -1,0 +1,12 @@
+USER           = dario
+WORKING_DIR    = /home/dario/Uni/Tirocinio/Supernova
+SYSTEM_NAME    = Linux
+NODE_NAME      = Teclast-F6
+RELEASE        = 5.5.8-1-MANJARO
+ARCH           = x86_64
+BYTE_ORDER     = little
+VERSION        = #1 SMP PREEMPT Thu Mar 5 20:29:51 UTC 2020
+PLUTO_DIR      = /home/dario/Uni/Tirocinio/PLUTO
+PLUTO_VERSION  = "4.3"
+C_COMPILER     = gcc
+MPI_C_COMPILER = mpicc
