@@ -52,11 +52,11 @@ for val in dim:
     ## Calc volume
     vol = np.zeros([data[val][0].n1, data[val][0].n2])
     vol[:,] = data[val][0].dx1*data[val][0].dx2*2*np.pi*data[val][0].x1
-    ## Calc mass for tr1<0.9
+    ## Calc mass for tr1<0.9, with units and symmetry
     for d in data[val]:
         idx = (d.tr1 < 0.9)
         d.rho[idx] = 0
-        mass[val].append(np.sum(vol*d.tr1*d.rho)*
+        mass[val].append(2*np.sum(vol*d.tr1*d.rho)*
                     UNIT_DENSITY*
                     UNIT_LENGTH**3
                     /M_SUN)
@@ -67,7 +67,7 @@ fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Step temporale')
 ax.set_ylabel(r'Massa ($M_{sun}$)')
-ax.set_ylim([3,5.4])
+ax.set_ylim([6,10.5])
 ax.set_xlim([0,10])
 ax.xaxis.set_major_locator(MultipleLocator(1))
 
@@ -75,8 +75,8 @@ ax.xaxis.set_major_locator(MultipleLocator(1))
 for val in dim:
     ax.plot(mass[val], label="{}x{}".format(val, val))
 
-## Add line at 5 M_SUN and add legend
-ax.axhline(y=5)
+## Add line at 10 M_SUN and add legend
+ax.axhline(y=10)
 ax.legend(fancybox=True, loc=0,
           title=r'Massa di elementi con tracciante < 90%',
           framealpha=1)
