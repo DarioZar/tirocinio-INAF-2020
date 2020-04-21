@@ -52,7 +52,7 @@ for val in dim:
     ## Calc volume
     vol = np.zeros([data[val][0].n1, data[val][0].n2])
     vol[:,] = data[val][0].dx1*data[val][0].dx2*2*np.pi*data[val][0].x1
-    ## Calc mass for tr1<0.9, with units and symmetry
+    ## Calc mass for tr1>0.9, with units and symmetry
     for d in data[val]:
         idx = (d.tr1 < 0.9)
         d.rho[idx] = 0
@@ -78,7 +78,7 @@ for val in dim:
 ## Add line at 10 M_SUN and add legend
 ax.axhline(y=10)
 ax.legend(fancybox=True, loc=0,
-          title=r'Massa di elementi con tracciante < 90%',
+          title=r'Massa di elementi con tracciante > 90%',
           framealpha=1)
 
 # Show and save plot
