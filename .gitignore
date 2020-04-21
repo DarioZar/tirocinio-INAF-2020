@@ -5,9 +5,14 @@ PLUTO/*
 **/makefile
 **/pluto
 
+# Local unsaved run
+Sedov/*dbl
+Sedov/*log
+Sedov/*out
+Supernova/*dbl
+Supernova/*log
+Supernova/*out
 
-# Created by https://www.gitignore.io/api/c,git,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=c,git,visualstudiocode
 
 ### C ###
 # Prerequisites
@@ -73,4 +78,6 @@ dkms.conf
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/c,git,visualstudiocode
+### Python virtualenv ###
+
+venv/
