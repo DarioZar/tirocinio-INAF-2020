@@ -89,7 +89,7 @@ void Init(double *us, double x1, double x2, double x3)
 }
 
 /* ********************************************************************* */
-void InitDomain(Data *d, Grid *grid)
+void InitDomain (Data *d, Grid *grid)
 /*! 
  * Assign initial condition by looping over the computational domain.
  * Called after the usual Init() function to assign initial conditions
