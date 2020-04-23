@@ -73,7 +73,7 @@ for val in dim:
 fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Step temporale')
-ax.set_ylabel(r'Massa ($M_{sun}$)')
+ax.set_ylabel(r'Massa normalizzata con M(0)')
 lim = {"tr1":[0.60,1.02], "tr2":[0.92,1.02]}
 ax.set_ylim(lim[tracer])
 ax.set_xlim([0,10])
