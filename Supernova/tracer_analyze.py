@@ -74,14 +74,15 @@ fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Step temporale')
 ax.set_ylabel(r'Massa ($M_{sun}$)')
-lim = {"tr1":[6,10.5], "tr2":[26,31]}
+lim = {"tr1":[0.60,1.02], "tr2":[0.92,1.02]}
 ax.set_ylim(lim[tracer])
 ax.set_xlim([0,10])
 ax.xaxis.set_major_locator(MultipleLocator(1))
 
 ## Plot mass for 128x128, 256x256, 512x512 and 1024x1024
+## Normalized
 for val in dim:
-    ax.plot(mass[val], label="{}x{}".format(val, val))
+    ax.plot(mass[val]/mass[val][0], label="{}x{}".format(val, val))
 
 ## Add line at inital mass and add legend
 initMass = {"tr1":10,
@@ -89,10 +90,10 @@ initMass = {"tr1":10,
             *UNIT_DENSITY
             *UNIT_LENGTH**3
             /M_SUN}
-ax.axhline(y=initMass[tracer], color="C4")
-ax.text(4.5, initMass[tracer]+0.04, "Massa iniziale")
+ax.axhline(y=initMass[tracer]/mass[val][0], color="C4")
+ax.text(4, initMass[tracer]/mass[val][0] + 0.002, "Massa condizioni iniziali")
 ax.legend(fancybox=True, loc=0,
-          title=r'Massa di elementi con tracciante {} > 90%'.format(tracer),
+          title='Massa di elementi con tracciante {} > 90% \n normalizzata a M(0)'.format(tracer),
           framealpha=1)
 
 # Show and save plot
