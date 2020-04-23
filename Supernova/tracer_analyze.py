@@ -57,7 +57,8 @@ for val in dim:
         data[val].append(pp.pload(n, w_dir="./{}/".format(val)))
     ## Calc volume
     vol = np.zeros([data[val][0].n1, data[val][0].n2])
-    vol[:,] = data[val][0].dx1*data[val][0].dx2*2*np.pi*data[val][0].x1
+    for i in range(data[val][0].n2):
+        vol[:,i] = data[val][0].dx1*data[val][0].dx2*2*np.pi*data[val][0].x1
     ## Calc mass for tr1>0.9, with units and symmetry
     for d in data[val]:
         idx = (getattr(d, tracer) < 0.9)
@@ -73,7 +74,7 @@ fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Step temporale')
 ax.set_ylabel(r'Massa ($M_{sun}$)')
-lim = {"tr1":[6,10.5], "tr2":[2,3]}
+lim = {"tr1":[6,10.5], "tr2":[26,31]}
 ax.set_ylim(lim[tracer])
 ax.set_xlim([0,10])
 ax.xaxis.set_major_locator(MultipleLocator(1))
@@ -83,10 +84,13 @@ for val in dim:
     ax.plot(mass[val], label="{}x{}".format(val, val))
 
 ## Add line at inital mass and add legend
-initMass = {"tr1":10, "tr2":0}
-if tracer == "tr1":
-    ax.axhline(y=initMass[tracer], color="C4")
-    ax.text(4.5, initMass[tracer]+0.02, "Massa iniziale")
+initMass = {"tr1":10,
+            "tr2":2*np.pi*np.pi*0.5*0.5*2.5*1.e2
+            *UNIT_DENSITY
+            *UNIT_LENGTH**3
+            /M_SUN}
+ax.axhline(y=initMass[tracer], color="C4")
+ax.text(4.5, initMass[tracer]+0.04, "Massa iniziale")
 ax.legend(fancybox=True, loc=0,
           title=r'Massa di elementi con tracciante {} > 90%'.format(tracer),
           framealpha=1)
