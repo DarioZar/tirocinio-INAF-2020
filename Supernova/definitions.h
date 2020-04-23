@@ -27,7 +27,7 @@
 
 /* [Beg] user-defined constants (do not change this line) */
 
-#define  INITIAL_SMOOTHING              YES
+#define  INITIAL_SMOOTHING              NO
 #define  M_SUN                          1.98855e33
 #define  UNIT_LENGTH                    3.0856776e18
 #define  UNIT_VELOCITY                  1e8
