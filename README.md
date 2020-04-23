@@ -1,13 +1,16 @@
 # Tirocinio INAF 2020
 Modelli fluidodinamici con [Pluto].
-![Animazione Rho](Supernova/1024/1024-rho.gif)
+
+<img src="Supernova/1024/1024-rho.gif" width="450">
 
 ## Sedov
 Simulazione di una blast wave di Sedov-Taylor. Codice incluso tra gli esempi di [Pluto].
 
 ## Supernova
 Simulazione della fase di espansione di Sedov per un SNR, in 2D, con simmetria cilindrica, in mezzo ambiente disomogeneo, e cioé con un ring denso attorno al SNR. Il setup è mostrato nella figura.
-![Rho iniziale](Supernova/initRho.png)
+
+<img src="Supernova/initRho.png" width="450">
+
 Contiene:
 - varie run svolte con risoluzioni diverse (128x128, 256x256, 512x512, 1024x1024)
 - `andamentoMassatr1.pdf`, generato con `tracer_analyze.py 1`, che mostra la massa delle regioni con più del 90% di materiale stellare (appartenente al SNR)
