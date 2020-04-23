@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import (AutoMinorLocator, MultipleLocator,
                                ScalarFormatter)
+import sys
 
 # Styleaxes function
 def styleaxes(*axs):
@@ -36,6 +37,11 @@ plt.rcParams.update(params)
 
 
 # Data analysis
+## Choose tracer
+if sys.argv[1] not in ["1","2"]:
+    raise ValueError("Tracer arg must be 1 or 2")
+else:
+    tracer = "tr"+sys.argv[1]
 ## Setup units
 UNIT_LENGTH = 3.0856776e18
 UNIT_DENSITY = 1.6726219e-24
@@ -54,12 +60,12 @@ for val in dim:
     vol[:,] = data[val][0].dx1*data[val][0].dx2*2*np.pi*data[val][0].x1
     ## Calc mass for tr1>0.9, with units and symmetry
     for d in data[val]:
-        idx = (d.tr1 < 0.9)
+        idx = (getattr(d, tracer) < 0.9)
         d.rho[idx] = 0
-        mass[val].append(2*np.sum(vol*d.tr1*d.rho)*
-                    UNIT_DENSITY*
-                    UNIT_LENGTH**3
-                    /M_SUN)
+        mass[val].append(2*np.sum(vol*getattr(d, tracer)*d.rho)*
+                         UNIT_DENSITY*
+                         UNIT_LENGTH**3
+                         /M_SUN)
 
 # Plot data
 ## Setup fig, axes, labels
@@ -67,7 +73,8 @@ fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Step temporale')
 ax.set_ylabel(r'Massa ($M_{sun}$)')
-ax.set_ylim([6,10.5])
+lim = {"tr1":[6,10.5], "tr2":[2,3]}
+ax.set_ylim(lim[tracer])
 ax.set_xlim([0,10])
 ax.xaxis.set_major_locator(MultipleLocator(1))
 
@@ -75,13 +82,17 @@ ax.xaxis.set_major_locator(MultipleLocator(1))
 for val in dim:
     ax.plot(mass[val], label="{}x{}".format(val, val))
 
-## Add line at 10 M_SUN and add legend
-ax.axhline(y=10)
+## Add line at inital mass and add legend
+initMass = {"tr1":10, "tr2":0}
+if tracer == "tr1":
+    ax.axhline(y=initMass[tracer], color="C4")
+    ax.text(4.5, initMass[tracer]+0.02, "Massa iniziale")
 ax.legend(fancybox=True, loc=0,
-          title=r'Massa di elementi con tracciante > 90%',
+          title=r'Massa di elementi con tracciante {} > 90%'.format(tracer),
           framealpha=1)
 
 # Show and save plot
 plt.tight_layout()
-fig.savefig("andamentoMassa.pdf", bbox_inches="tight")
+fig.savefig("andamentoMassa{}.pdf".format(tracer), 
+            bbox_inches="tight")
 plt.show()
