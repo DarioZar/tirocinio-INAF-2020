@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import pyPLUTO as pp
+import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import os
@@ -26,6 +28,11 @@ else:
     var = sys.argv[2]
 # Choose max step to plot
 steps = sys.argv[3]
+# Choose if log
+if sys.argv[4] == 'log':
+    log = True
+else:
+    log = False
 
 # Get data
 data = []
@@ -45,10 +52,22 @@ for n in range(int(steps)+1):
 
 # Plotting
 os.chdir(path)
+labels = {'rho': u"Densità",
+          'prs': "Pressione",
+          'tr1': "Tracciante 1 (SNR)",
+          'tr2': "Tracciante 2 (Ring)"}
+if log:
+    labels[var] += " (log)"
+
 for D,n in zip(data, range(maxstep+1)):
+    if log:
+        vals = np.log(getattr(D, var))
+    else:
+        vals = getattr(D, var)
+    
     I = pp.Image()
-    I.pldisplay(D, getattr(D, var), x1=D.x1, x2=D.x2,
-                title=var, label1 = "r", label2="z",
+    I.pldisplay(D, vals, x1=D.x1, x2=D.x2,
+                title=labels[var], label1 = "r", label2="z",
                 cbar=(True, "vertical"))
     plt.savefig("{}_{:04d}.png".format(var,n))
     plt.clf()
