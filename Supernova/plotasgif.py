@@ -29,7 +29,7 @@ else:
 # Choose max step to plot
 steps = sys.argv[3]
 # Choose if log
-if sys.argv[4] == 'log':
+if raw_input("Logaritmico? (s/n)\n") == 's':
     log = True
 else:
     log = False
@@ -58,6 +58,7 @@ labels = {'rho': u"Densità",
           'tr2': "Tracciante 2 (Ring)"}
 if log:
     labels[var] += " (log)"
+labels[var] += (" " + path)
 
 for D,n in zip(data, range(maxstep+1)):
     if log:
