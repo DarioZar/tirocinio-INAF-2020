@@ -1,7 +1,7 @@
 import pyPLUTO as pp
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.ticker import (AutoMinorLocator, FixedLocator,
+from matplotlib.ticker import (AutoMinorLocator, 
                                ScalarFormatter)
 import sys
 
@@ -45,31 +45,24 @@ M_SUN = 1.98855e33
 dim = [128, 256, 512, 1024]
 data = {}
 mass = {"tr1":{}, "tr2":{}}
-mass90 = {"tr1":{}, "tr2":{}}
 for val in dim:
     data.update({val:[]})
     mass["tr1"].update({val:[]})
     mass["tr2"].update({val:[]})
-    mass90["tr1"].update({val:[]})
-    mass90["tr2"].update({val:[]})
-    data[val] = pp.pload(0, w_dir="./{}/".format(val))
+    data[val] = pp.pload(0, w_dir="./{}/roe/".format(val))
     ## Calc volume
     vol = np.zeros([data[val].n1, data[val].n2])
     for i in range(data[val].n2):
         vol[:,i] = data[val].dx1*data[val].dx2*2*np.pi*data[val].x1
     ## Calc mass for tr and tr<90, with units and symmetry
     for tracer in ["tr1", "tr2"]:
-        mass[tracer][val] = (2*np.sum(vol*getattr(data[val], tracer)*data[val].rho)*
+        idx = (getattr(data[val], tracer) < 0.9)
+        rho = np.copy(data[val].rho)
+        rho[idx] = 0
+        mass[tracer][val] = (2*np.sum(vol*getattr(data[val], tracer)*rho)*
                              UNIT_DENSITY*
                              UNIT_LENGTH**3
                              /M_SUN)
-        rho = np.copy(data[val].rho)
-        idx = (getattr(data[val], tracer) < 0.9)
-        rho[idx] = 0
-        mass90[tracer][val] = (2*np.sum(vol*getattr(data[val], tracer)*rho)*
-                                UNIT_DENSITY*
-                                UNIT_LENGTH**3
-                                /M_SUN)
 
 # Plot data
 ## Setup fig, axes, labels
@@ -77,7 +70,7 @@ fig, ax = plt.subplots()
 styleaxes(ax)
 ax.set_xlabel(r'Dimensione griglia')
 ax.set_ylabel(r'Massa normalizzata con massa condizioni iniziali')
-ax.set_ylim([0.93, 1.01])
+ax.set_ylim([0.9975, 1.02])
 ax.set_xlim([-1,4])
 plt.xticks([0,1,2,3],
            ["128x128", "256x256", "512x512", "1024x1024"])
@@ -90,9 +83,8 @@ initMass = {"tr1":10,
 
 for tracer in ["tr1", "tr2"]:
     # Plot mass with tracer
+    print(np.array(mass[tracer].values())/initMass[tracer])
     ax.plot(np.array(mass[tracer].values())/initMass[tracer],
-            label="Massa di elementi con tracciante {}".format(tracer))
-    ax.plot(np.array(mass90[tracer].values())/initMass[tracer],
             label="Massa di elementi con tracciante {} > 90%".format(tracer))
 
 # Plot initial mass
