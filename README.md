@@ -19,7 +19,7 @@ Contiene:
 - `andamentoM0.pdf`, generato con `M0analyze.py`, che mostra la massa delle regioni con più del 90% di materiale di SNR/Ring all'istante iniziale, confrontato con le rispettive masse settate nelle condizioni iniziali
 - `paralSpeedup.pdf`, generato dai dati in `ParalTest/` con `paral_analyze.py`, che mostra lo speedup parallelo di run con 1,2,4 processori
 - `tracer_analyze.py`, che richiede `pyPLUTO`, `matplotlib` e `numpy`. Uso: `tracer_analyze.py mode n`, con `mode` test da fare (`conv` per il test di convergenza a risoluzioni diverse e solver roe, `solv` per il test di solver a risoluzione 512x512 e solver hll, hllc, roe) e `n` numero del tracer
-- `plotasgif.py`, che richiede `pyPLUTO`, `matplotlib`, `numpy` e `imagemagick`. Genera una .gif con i surface plot, anche in scala log, presi ai vari step calcolati, per una variabile scelta. Uso: `plotasgif.py path var steps`, con `path` path in cui si trovano i file della run, `var` variabile da mostrare a scelta tra `rho, prs, tr1, tr2` e `steps` masssimo numero di passi da mettere nella .gif
+- `plotasgif.py`, che richiede `pyPLUTO`, `matplotlib`, `numpy` e `imagemagick`. Genera una .gif con i surface plot, anche in scala log, presi ai vari step calcolati, per una variabile scelta. Uso: `plotasgif.py path var steps [--log] [--cmap cmap]`, con `path` path in cui si trovano i file della run, `var` variabile da mostrare a scelta tra `rho, prs, tr1, tr2`, `steps` masssimo numero di passi da mettere nella .gif, `--log` per un grafico di log(var) e `cmap` a scelta tra quelle incluse in matplotlib.
 
 
 

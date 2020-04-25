@@ -2,8 +2,9 @@
 import pyPLUTO as pp
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
+from matplotlib import cm
 import os
+import argparse
 
 # Plot style settings
 plt.style.use('seaborn-deep')
@@ -19,20 +20,24 @@ params = {
 }
 plt.rcParams.update(params)
 
-# Choose path
-path = sys.argv[1]
-# Choose variable to plot
-if sys.argv[2] not in ["rho","prs","tr1","tr2"]:
-    raise ValueError("Var to plot must be rho, prs, tr1 or tr2")
-else:
-    var = sys.argv[2]
-# Choose max step to plot
-steps = sys.argv[3]
-# Choose if log
-if raw_input("Logaritmico? (s/n)\n") == 's':
-    log = True
-else:
-    log = False
+# Parse arguments
+parser = argparse.ArgumentParser(description="Plot gif from Pluto simulation data")
+parser.add_argument("path", help="Simulation path")
+parser.add_argument("var", help="Variable to plot",
+                    choices=["rho","prs","tr1","tr2"])
+parser.add_argument("steps", help="Steps to plot", type=int)
+parser.add_argument("--log", help="Plot log(var)",
+                    action="store_true")
+parser.add_argument("--cmap", help="Choose colormap",
+                    choices=sorted(cm.cmap_d), default="jet")
+args = parser.parse_args()
+
+
+path = args.path
+var = args.var
+steps = args.steps
+log = args.log
+cmap = args.cmap
 
 # Get data
 data = []
@@ -44,7 +49,7 @@ for n in range(int(steps)+1):
         maxstep = n
     except IOError:
         if maxstep==-1:
-            print("Path does not contain any data.000x.dbl")
+            raise IOError("Path does not contain any data.000x.dbl")
         else:
             print("{} is too high".format(steps))
             print("Plotting gif to step {}".format(maxstep))
@@ -60,6 +65,7 @@ if log:
     labels[var] += " (log)"
 labels[var] += (" " + path)
 
+plt.set_cmap(cmap)
 for D,n in zip(data, range(maxstep+1)):
     if log:
         vals = np.log(getattr(D, var))
