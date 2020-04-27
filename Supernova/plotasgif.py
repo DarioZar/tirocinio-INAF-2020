@@ -54,6 +54,7 @@ def plotimage(D, var, vmin, vmax, cmap, log=False):
     fig.colorbar(image)
     return fig
 
+# Get range of var for all the timesteps
 def getfixrange(data, var):
     minvar = []
     maxvar = []
@@ -62,6 +63,7 @@ def getfixrange(data, var):
         maxvar.append(np.max(getattr(D, var)))
     return np.min(minvar), np.max(maxvar)
 
+# Parse arguments using the defined function
 args = parsearguments()
 path = args.path
 var = args.var
@@ -87,7 +89,9 @@ for n in range(int(steps)+1):
             break
 
 # Plotting
+## Change dir
 os.chdir(path)
+## Prepare plot labels
 labels = {'rho': u"Densità",
           'prs': "Pressione",
           'tr1': "Tracciante 1 (SNR)",
@@ -95,12 +99,12 @@ labels = {'rho': u"Densità",
 if log:
     labels[var] += " (log)"
 labels[var] += (" " + path) 
-
+## Prepare scale if fixed
 if fixscale:
     vmin, vmax = getfixrange(data, var)
 
+## Plot data and save in .png
 for D,n in zip(data, range(maxstep+1)):
-
     if not fixscale:
         vmin = np.min(getattr(data[n], var))
         vmax = np.max(getattr(data[n], var))
@@ -109,6 +113,6 @@ for D,n in zip(data, range(maxstep+1)):
     fig.savefig("{}_{:04d}.png".format(var,n))
     fig.clf()
 
-# Creating gif
+# Create gif using generated .png
 os.system("convert -delay 30 {}_*.png {}_log{}_fix{}.gif".format(var,var,log,fixscale))
 os.system("rm {}_*.png".format(var))
