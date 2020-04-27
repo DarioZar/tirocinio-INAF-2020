@@ -16,28 +16,59 @@ params = {
 'ytick.labelsize': 10,
 'figure.figsize': [8, 8],
 'font.family': 'serif',
-'lines.linewidth': 1.5,
+'lines.linewidth': 1.5
 }
 plt.rcParams.update(params)
 
-# Parse arguments
-parser = argparse.ArgumentParser(description="Plot gif from Pluto simulation data")
-parser.add_argument("path", help="Simulation path")
-parser.add_argument("var", help="Variable to plot",
-                    choices=["rho","prs","tr1","tr2"])
-parser.add_argument("steps", help="Steps to plot", type=int)
-parser.add_argument("--log", help="Plot log(var)",
-                    action="store_true")
-parser.add_argument("--cmap", help="Choose colormap",
-                    choices=sorted(cm.cmap_d), default="jet")
-args = parser.parse_args()
+def parsearguments():
+    # Parse arguments
+    parser = argparse.ArgumentParser(description="Plot gif from Pluto simulation data")
+    parser.add_argument("path", help="Simulation path")
+    parser.add_argument("var", help="Variable to plot",
+                        choices=["rho","prs","tr1","tr2"])
+    parser.add_argument("steps", help="Steps to plot",
+                        type=int)
+    parser.add_argument("--log", help="Plot log(var)",
+                        action="store_true")
+    parser.add_argument("--cmap", help="Choose colormap",
+                        choices=sorted(cm.cmap_d), default="jet")
+    parser.add_argument("--fixscale", help="Fix the scale",
+                        action="store_true")
+    args = parser.parse_args()
+    return args
 
+def plotimage(D, var, vmin, vmax, cmap, log=False):
+    if log:
+        vals = np.log10(getattr(D, var)).T
+        vmin = np.log10(vmin)
+        vmax = np.log10(vmax)
+    else:
+        vals = getattr(D, var).T
+    fig, ax = plt.subplots()
+    ax.set_title(labels[var])
+    ax.set_xlabel('r (Parsec)')
+    ax.set_ylabel('z (Parsec)')
+    ax.set_xlim([min(D.x1), max(D.x1)])
+    ax.set_ylim([min(D.x2), max(D.x2)])
+    image = ax.pcolormesh(D.x1,D.x2,vals,cmap=cmap,vmin=vmin,vmax=vmax)
+    fig.colorbar(image)
+    return fig
 
+def getfixrange(data, var):
+    minvar = []
+    maxvar = []
+    for D in data:
+        minvar.append(np.min(getattr(D, var)))
+        maxvar.append(np.max(getattr(D, var)))
+    return np.min(minvar), np.max(maxvar)
+
+args = parsearguments()
 path = args.path
 var = args.var
 steps = args.steps
 log = args.log
 cmap = args.cmap
+fixscale = args.fixscale
 
 # Get data
 data = []
@@ -63,22 +94,21 @@ labels = {'rho': u"Densità",
           'tr2': "Tracciante 2 (Ring)"}
 if log:
     labels[var] += " (log)"
-labels[var] += (" " + path)
+labels[var] += (" " + path) 
 
-plt.set_cmap(cmap)
+if fixscale:
+    vmin, vmax = getfixrange(data, var)
+
 for D,n in zip(data, range(maxstep+1)):
-    if log:
-        vals = np.log(getattr(D, var))
-    else:
-        vals = getattr(D, var)
+
+    if not fixscale:
+        vmin = np.min(getattr(data[n], var))
+        vmax = np.max(getattr(data[n], var))
     
-    I = pp.Image()
-    I.pldisplay(D, vals, x1=D.x1, x2=D.x2,
-                title=labels[var], label1 = "r", label2="z",
-                cbar=(True, "vertical"))
-    plt.savefig("{}_{:04d}.png".format(var,n))
-    plt.clf()
+    fig = plotimage(D, var, vmin, vmax, cmap, log)
+    fig.savefig("{}_{:04d}.png".format(var,n))
+    fig.clf()
 
 # Creating gif
-os.system("convert -delay 30 {}_*.png {}.gif".format(var,var))
+os.system("convert -delay 30 {}_*.png {}_log{}_fix{}.gif".format(var,var,log,fixscale))
 os.system("rm {}_*.png".format(var))
