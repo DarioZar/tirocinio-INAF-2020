@@ -1,2 +1,8 @@
+*	text=auto
+*.dbl filter=lfs diff=lfs merge=lfs -text
+*.png	binary
+*.gif	binary
+*.gz	binary
+*.pdf	binary
 Supernova/SmoothingEnabled/128/data.0000.dbl !text !filter !merge !diff
 *.dbl !text !filter !merge !diff
