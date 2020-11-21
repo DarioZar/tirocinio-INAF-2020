@@ -94,6 +94,6 @@ ax.legend(fancybox=True, loc=0, framealpha=1)
 
 # Show and save plot
 plt.tight_layout()
-fig.savefig("andamentoM0.pdf", 
+fig.savefig("./plots/andamentoM0.pdf", 
             bbox_inches="tight")
 plt.show()

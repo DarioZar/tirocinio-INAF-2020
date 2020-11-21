@@ -104,6 +104,6 @@ ax.legend(fancybox=True, loc=0,
 
 # Show and save plot
 plt.tight_layout()
-fig.savefig("{}-test-{}.pdf".format(modekey, tracer), 
+fig.savefig("./plots/{}-test-{}.pdf".format(modekey, tracer), 
             bbox_inches="tight")
 plt.show()
