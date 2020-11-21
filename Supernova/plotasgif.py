@@ -32,18 +32,25 @@ def parsearguments():
                         action="store_true")
     parser.add_argument("--cmap", help="Choose colormap",
                         choices=sorted(cm.cmap_d), default="jet")
-    parser.add_argument("--fixscale", help="Fix the scale",
+    parser.add_argument("--fixscale", help="Fixed scale",
+                        action="store_true")
+    parser.add_argument("--cgs", help="Set cgs units",
                         action="store_true")
     args = parser.parse_args()
     return args
 
-def plotimage(D, var, vmin, vmax, cmap, log=False):
+def plotimage(D, var, vmin, vmax, cmap, log=False, cgs=False, units=None):
+    vals = getattr(D, var).T
+
+    if cgs:
+        vals *= units[var]
+        vmin *= units[var]
+        vmax *= units[var]
     if log:
-        vals = np.log10(getattr(D, var)).T
+        vals = np.log10(vals)
         vmin = np.log10(vmin)
         vmax = np.log10(vmax)
-    else:
-        vals = getattr(D, var).T
+    
     fig, ax = plt.subplots()
     ax.set_title(labels[var])
     ax.set_xlabel('r (Parsec)')
@@ -63,56 +70,64 @@ def getfixrange(data, var):
         maxvar.append(np.max(getattr(D, var)))
     return np.min(minvar), np.max(maxvar)
 
-# Parse arguments using the defined function
-args = parsearguments()
-path = args.path
-var = args.var
-steps = args.steps
-log = args.log
-cmap = args.cmap
-fixscale = args.fixscale
 
-# Get data
-data = []
+if __name__ == '__main__':
+    # Parse arguments using the defined function
+    args = parsearguments()
+    path = args.path
+    var = args.var
+    steps = args.steps
+    log = args.log
+    cmap = args.cmap
+    fixscale = args.fixscale
+    cgs=args.cgs
 
-maxstep = -1
-for n in range(int(steps)+1):
-    try:
-        data.append(pp.pload(n, w_dir=path))
-        maxstep = n
-    except IOError:
-        if maxstep==-1:
-            raise IOError("Path does not contain any data.000x.dbl")
-        else:
-            print("{} is too high".format(steps))
-            print("Plotting gif to step {}".format(maxstep))
-            break
+    # Get data
+    data = []
 
-# Plotting
-## Change dir
-os.chdir(path)
-## Prepare plot labels
-labels = {'rho': u"Densità",
-          'prs': "Pressione",
-          'tr1': "Tracciante 1 (SNR)",
-          'tr2': "Tracciante 2 (Ring)"}
-if log:
-    labels[var] += " (log)"
-labels[var] += (" " + path) 
-## Prepare scale if fixed
-if fixscale:
-    vmin, vmax = getfixrange(data, var)
+    maxstep = -1
+    for n in range(int(steps)+1):
+        try:
+            data.append(pp.pload(n, w_dir=path))
+            maxstep = n
+        except IOError:
+            if maxstep==-1:
+                raise IOError("Path does not contain any data.000x.dbl")
+            else:
+                print("{} is too high".format(steps))
+                print("Plotting gif to step {}".format(maxstep))
+                break
 
-## Plot data and save in .png
-for D,n in zip(data, range(maxstep+1)):
-    if not fixscale:
-        vmin = np.min(getattr(data[n], var))
-        vmax = np.max(getattr(data[n], var))
-    
-    fig = plotimage(D, var, vmin, vmax, cmap, log)
-    fig.savefig("{}_{:04d}.png".format(var,n))
-    fig.clf()
+    # Plotting
+    ## Change dir
+    os.chdir(path)
+    ## Prepare plot labels
+    labels = {'rho': u"Densità",
+              'prs': "Pressione",
+              'tr1': "Tracciante 1 (SNR)",
+              'tr2': "Tracciante 2 (Ring)"}
+    if log:
+        labels[var] += " (log)"
+    labels[var] += (" " + path)
+    ## Prepare units
+    units = {'rho': 1.6726219e-24,
+             'prs': 1.6726219e-24*1e8*1e8,
+             'tr1':1,
+             'tr2':1}
+    ## Prepare scale if fixed
+    if fixscale:
+        vmin, vmax = getfixrange(data, var)
 
-# Create gif using generated .png
-os.system("convert -delay 30 {}_*.png {}_log{}_fix{}.gif".format(var,var,log,fixscale))
-os.system("rm {}_*.png".format(var))
+    ## Plot data and save in .png
+    for D,n in zip(data, range(maxstep+1)):
+        if not fixscale:
+            vmin = np.min(getattr(data[n], var))
+            vmax = np.max(getattr(data[n], var))
+        
+        fig = plotimage(D, var, vmin, vmax, cmap, log, cgs, units)
+        fig.savefig("{}_{:04d}.png".format(var,n))
+        fig.clf()
+
+    # Create gif using generated .png
+    os.system("convert -delay 30 {}_*.png {}_log{}_fix{}.gif".format(var,var,log,fixscale))
+    os.system("rm {}_*.png".format(var))
